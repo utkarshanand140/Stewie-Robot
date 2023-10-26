@@ -19,35 +19,35 @@ Servo servo1;
 Servo servo2;
 Servo servo3;
 
-float servo_lower_limit_deg = 0;
-float servo_upper_limit_deg = 90;
+float servo_lower_limit_deg = 90;
+float servo_upper_limit_deg = 180;
 float servo_range = servo_upper_limit_deg - servo_lower_limit_deg;
 
-float initial_servo_position = 0;
+float initial_servo_position = 90;
 
 
-float cumulative_error1 = 0;
+double cumulative_error1 = 0;
 float previous_error1 = 0;
 
-float Kp1 = 1.5;
-float Ki1 = 0.05;
-float Kd1 = 0.1;
+float Kp1 = 2;
+double Ki1 = 0.2;
+float Kd1 = 0.2;
 
 
-float cumulative_error2 = 0;
+double cumulative_error2 = 0;
 float previous_error2 = 0;
 
 float Kp2 = 2;
-float Ki2 = 0.2;
+double Ki2 = 0.2;
 float Kd2 = 0.2;
 
 
-float cumulative_error3 = 0;
+double cumulative_error3 = 0;
 float previous_error3 = 0;
 
-float Kp3 = 1.5;
-float Ki3 = 0.05;
-float Kd3 = 0.1;
+float Kp3 = 2;
+double Ki3 = 0.2;
+float Kd3 = 0.2;
 
 
 
@@ -110,7 +110,7 @@ float middle(float a, float b, float c)
        return c;
 }
 
-float pid(float kp, float ki, float kd, float *errorSum, float *lastError, float current_z, float desired_z)
+float pid(float kp, double ki, float kd, double *errorSum, float *lastError, float current_z, float desired_z)
 {
     // input --> Z coordiate data from the calculations
     // output --> New angle for servo to move to reach desired z coordiate  point
@@ -181,33 +181,34 @@ void loop()
     servo2.write(servo_angle2);
     servo1.write(servo_angle3);
 
-//    // Initialize SD card
-//  if (!SD.begin(BUILTIN_SDCARD)) {
-//    Serial.println("SD card initialization failed!");
-//    return;
-//  }
+// Initialize SD card
+
+  if (!SD.begin(BUILTIN_SDCARD)) {
+    Serial.println("SD card initialization failed!");
+    return;
+ }
   
-//  Serial.println("SD card initialized successfully.");
+Serial.println("SD card initialized successfully.");
   
-  // Open file for writing
-//  dataFile = SD.open("data.txt", FILE_WRITE);
+  Open file for writing
+ dataFile = SD.open("data.txt", FILE_WRITE);
   
-//  if (!dataFile) {
-//    Serial.println("Error opening data.txt");
-//    return;
-//  }
+  if (!dataFile) {
+    Serial.println("Error opening data.txt");
+    return;
+ }
   
-//  Serial.println("Writing data to data.txt...");
+Serial.println("Writing data to data.txt...");
   
   // Write some data to the file
   String data = "";
-    data += String(theta_x) + ", " + String(theta_y) + ", " + String(theta_z) + ", " + String(Zpb1) + ", " + String(Zpb2) + ", " + String(Zpb3) + ", "+ String(servo_angle1) + ", " + String(servo_angle2) + ", " + String(servo_angle3);
-//    dataFile.println(data);
+    data += String(theta_x) + ", " + String(theta_y) + ", " + String(theta_z) + ", " + String(Zpb1) + ", " + String(Zpb2) + ", " + String(Zpb3) + ", "+ String(cumulative_error1) + ", " + String(cumulative_error2) + ", " + String(cumulative_error3);
+dataFile.println(data);
   
   // Close the file
-//  dataFile.close();
+dataFile.close();
   
-//  Serial.println("Data written to data.txt");
+Serial.println("Data written to data.txt");
   Serial.println(data);
 
     delay(200);
